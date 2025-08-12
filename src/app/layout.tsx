@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
 import { Poppins } from "next/font/google";
-import { MantineProvider, Box, createTheme } from '@mantine/core';
-import SideMenu from "./_components/SideMenu";
+import { Box } from '@mantine/core';
+import { MantineProviderWrapper } from "../providers/Mantine.provider";
+import SideMenu from "./_components/sidebar/SideMenu";
 import "./globals.css";
 import '@mantine/core/styles.css';
+import ScreenWrapper from "./_components/ScreenWrapper";
 
 const poppins = Poppins({
   variable: "--font-poppins",
@@ -16,9 +18,6 @@ export const metadata: Metadata = {
   description: "A Next.js app for Chameleon AI",
 };
 
-const theme = createTheme({
-});
-
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -27,14 +26,16 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${poppins.variable} antialiased`}>
-        <MantineProvider  theme= {theme} defaultColorScheme="dark">
-        <Box className="container mx-auto flex h-full gap-4">
+        <MantineProviderWrapper>
+          <ScreenWrapper>
+        <Box className="mx-auto w-full flex h-full gap-4 overflow-hidden">
           <Box className="hidden md:block">
             <SideMenu />
           </Box>
           <Box className="grow">{children}</Box>
         </Box>
-        </MantineProvider>
+        </ScreenWrapper>
+        </MantineProviderWrapper>
       </body>
     </html>
   );
