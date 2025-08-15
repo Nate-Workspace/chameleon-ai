@@ -1,14 +1,14 @@
 import 'server-only'
 
 import { db } from '@/db/index';
-import { usersTable } from '@/db/schema';
+import { user } from '@/db/schema';
 
 export const createUser = async () =>{
-    const user ={
+    const userTrial ={
         name: 'Nathan Israel',
         age: 22,
         email: 'nathanisrael.pro@gmail.com'
     }
 
-    return await db.insert(usersTable).values(user).returning();
+    return await db.insert(user).values(userTrial).returning();
 }
