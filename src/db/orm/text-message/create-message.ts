@@ -1,7 +1,10 @@
-import { db } from "@/db";
-import { message } from "@/db/schema";
+'server-only'
 
-export async function createMessage(data: {id: string, sender: "user"| "ai", content: string}){
+import { db } from "@/db/index"
+import { message } from "@/db/schema";
+import { CreateMessageProp } from "@/types/message-create-types";
+
+export async function createMessage(data: CreateMessageProp){
     return await db
     .insert(message)
     .values({

@@ -5,15 +5,10 @@ import { Box, Textarea, Button, ScrollArea } from "@mantine/core";
 import ReactMarkdown from "react-markdown";
 import axios from "axios";
 import { createMessageAction } from "./actions/create-message-action";
-
-type Message = {
-  id: string;
-  sender: "user" | "ai";
-  content: string;
-};
+import { CreateMessageProp } from "@/types/message-create-types";
 
 export default function ChatArea() {
-  const [messages, setMessages] = useState<Message[]>([
+  const [messages, setMessages] = useState<CreateMessageProp[]>([
     {
       id: "1",
       sender: "ai",
@@ -26,7 +21,7 @@ export default function ChatArea() {
   const sendMessage = async () => {
     if (!input.trim()) return;
     
-    const newMessage: Message = {
+    const newMessage: CreateMessageProp = {
       id: Date.now().toString(),
       sender: "user",
       content: input,
