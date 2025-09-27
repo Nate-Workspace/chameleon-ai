@@ -4,40 +4,41 @@ import { sql } from "drizzle-orm";
 
 export const user = pgTable("user", {
   id: uuid().default(sql`gen_random_uuid()`).primaryKey(),
-  name: varchar({ length: 255 }),
-  email: varchar({ length: 255 }).unique(),
-  image: text(),
-  hashedPassword: text(),
-  createdAt: timestamp({ withTimezone: true }).defaultNow(),
-  updatedAt: timestamp({ withTimezone: true }).defaultNow().$onUpdate(() => new Date()),
+  name: varchar("name", { length: 255 }),
+  email: varchar("email", { length: 255 }).unique(),
+  image: text("image"),
+  hashedPassword: text("hashed_password"),
+  createdAt: timestamp("created_at",{ withTimezone: true }).defaultNow(),
+  updatedAt: timestamp("updated_at",{ withTimezone: true }).defaultNow().$onUpdate(() => new Date()),
 });
 
 
 export const folder = pgTable("folder", {
   id: uuid().default(sql`gen_random_uuid()`).primaryKey(),
-  userId: uuid().references(() => user.id, { onDelete: "cascade" }),
-  name: varchar({ length: 255 }),
-  createdAt: timestamp({ withTimezone: true }).defaultNow(),
+  userId: uuid("user_id").notNull(),
+  chatId: uuid("chat_id"),
+  name: varchar("name",{ length: 255 }).notNull(),
+  createdAt: timestamp("created_at",{ withTimezone: true }).defaultNow(),
 });
 
 
 export const chat = pgTable("chat", {
   id: uuid().default(sql`gen_random_uuid()`).primaryKey(),
-  userId: uuid().references(() => user.id, { onDelete: "cascade" }),
-  folderId: uuid().references(() => folder.id, { onDelete: "set null" }), // optional
-  title: varchar({ length: 255 }),
-  createdAt: timestamp({ withTimezone: true }).defaultNow(),
-  lastMessageAt: timestamp({ withTimezone: true }).defaultNow(),
+  userId: uuid("user_id"),
+  folderId: uuid("folder_id"),
+  title: varchar("title",{ length: 255 }).notNull(),
+  createdAt: timestamp("created_at",{ withTimezone: true }).defaultNow(),
+  lastMessageAt: timestamp("last_message",{ withTimezone: true }).defaultNow(),
 });
 
 
 export const message = pgTable("message", {
   id: uuid().default(sql`gen_random_uuid()`).primaryKey(),
-  chatId: uuid().references(() => chat.id, { onDelete: "cascade" }),
-  sender: varchar({ length: 10 }).$type<"user" | "ai">(),
-  body: text(),
-  image: text(),
-  createdAt: timestamp({ withTimezone: true }).defaultNow(),
+  chatId: uuid("chat_id").notNull(),
+  sender: varchar("sender",{ length: 10 }).$type<"user" | "ai">().notNull(),
+  body: text("body"),
+  image: text("image"),
+  createdAt: timestamp("created_at",{ withTimezone: true }).defaultNow(),
 });
 
 
