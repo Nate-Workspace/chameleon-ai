@@ -1,5 +1,6 @@
 export type CreateMessageProp = {
-  id: string;
+  id?: string;
+  chatId: string;
   sender: "user" | "ai";
   content: string;
 };

@@ -11,6 +11,7 @@ export default function ChatArea() {
   const [messages, setMessages] = useState<CreateMessageProp[]>([
     {
       id: "1",
+      chatId:"asdfasfda",
       sender: "ai",
       content: "Hello! 👋 I'm Chameleon AI. How can I help you today?",
     },
@@ -23,6 +24,7 @@ export default function ChatArea() {
     
     const newMessage: CreateMessageProp = {
       id: Date.now().toString(),
+      chatId: "asdfasf",
       sender: "user",
       content: input,
     };

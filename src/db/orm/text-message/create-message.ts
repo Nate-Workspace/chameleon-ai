@@ -5,13 +5,16 @@ import { message } from "@/db/schema";
 import { CreateMessageProp } from "@/types/message-create-types";
 
 export async function createMessage(data: CreateMessageProp){
-    return await db
+    const [response] = await db
     .insert(message)
     .values({
+        chatId: data.chatId,
         sender: data.sender,
         body: data.content,
     })
     .returning({
         id: message.id
     })
+
+    return response;
 }
