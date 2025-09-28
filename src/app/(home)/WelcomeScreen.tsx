@@ -65,8 +65,8 @@ const WelcomeScreen = () => {
         console.log("Error trying to create a chat.")
       }
 
-      const userMessage$ = createMessageAction({chatId: chat.id, sender: "user", content: input});
-      const message$ =  createMessageAction({chatId: chat.id, sender: "ai", content: res.data});
+      const userMessage$ = createMessageAction({chatId: chat.id, sender: "user", body: input});
+      const message$ =  createMessageAction({chatId: chat.id, sender: "ai", body: res.data});
 
       const [userMessage, message] = await Promise.all([userMessage$, message$])
 

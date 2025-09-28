@@ -10,7 +10,7 @@ export async function createMessage(data: CreateMessageProp){
     .values({
         chatId: data.chatId,
         sender: data.sender,
-        body: data.content,
+        body: data?.body,
     })
     .returning({
         id: message.id

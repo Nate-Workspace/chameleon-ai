@@ -5,35 +5,36 @@ import { Box, Textarea, Button, ScrollArea } from "@mantine/core";
 import ReactMarkdown from "react-markdown";
 import axios from "axios";
 import { createMessageAction } from "./actions/create-message-action";
-import { CreateMessageProp } from "@/types/message-create-types";
+import { CreateMessageProp, getMessagesType } from "@/types/message-create-types";
 
-export default function ChatArea() {
-  const [messages, setMessages] = useState<CreateMessageProp[]>([
-    {
-      id: "1",
-      chatId:"asdfasfda",
-      sender: "ai",
-      content: "Hello! 👋 I'm Chameleon AI. How can I help you today?",
-    },
-  ]);
+export default function ChatArea({messages}: {messages:getMessagesType[]}) {
+  // const [messages, setMessages] = useState<CreateMessageProp[]>([
+  //   {
+  //     id: "1",
+  //     chatId:"asdfasfda",
+  //     sender: "ai",
+  //     body: "Hello! 👋 I'm Chameleon AI. How can I help you today?",
+  //     image: "something",
+  //   },
+  // ]);
   const [input, setInput] = useState("");
   const scrollRef = useRef<HTMLDivElement>(null);
 
   const sendMessage = async () => {
     if (!input.trim()) return;
     
-    const newMessage: CreateMessageProp = {
-      id: Date.now().toString(),
-      chatId: "asdfasf",
-      sender: "user",
-      content: input,
-    };
+    // const newMessage: CreateMessageProp = {
+    //   id: Date.now().toString(),
+    //   chatId: "asdfasf",
+    //   sender: "user",
+    //   content: input,
+    // };
 
     // setMessages((prev) => [...prev, newMessage]);
 
     try {
-      const sent = await createMessageAction(newMessage);
-      console.log("Message sent sent:", sent);
+      // const sent = await createMessageAction(newMessage);
+      // console.log("Message sent sent:", sent);
     // const res = await axios.post("/api/ai/gemini", {
     //   prompt: input,
     // });
@@ -73,7 +74,7 @@ export default function ChatArea() {
                     : "bg-gray-100 text-gray-900"
                 }`}
               >
-                <ReactMarkdown>{msg.content}</ReactMarkdown>
+                <ReactMarkdown>{msg?.body}</ReactMarkdown>
               </div>
             </div>
           ))}
