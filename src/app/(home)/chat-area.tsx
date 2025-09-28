@@ -1,55 +1,72 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useTransition } from "react";
 import { Box, Textarea, Button, ScrollArea } from "@mantine/core";
 import ReactMarkdown from "react-markdown";
 import axios from "axios";
 import { createMessageAction } from "./actions/create-message-action";
-import { CreateMessageProp, getMessagesType } from "@/types/message-create-types";
+import {
+  CreateMessageProp,
+  getMessagesType,
+} from "@/types/message-create-types";
+import { notify } from "../_components/notification/notify";
+import { revalidatePath } from "next/cache";
+import { revalidateChat } from "@/utils/revalidate";
 
-export default function ChatArea({messages}: {messages:getMessagesType[]}) {
-  // const [messages, setMessages] = useState<CreateMessageProp[]>([
-  //   {
-  //     id: "1",
-  //     chatId:"asdfasfda",
-  //     sender: "ai",
-  //     body: "Hello! 👋 I'm Chameleon AI. How can I help you today?",
-  //     image: "something",
-  //   },
-  // ]);
+export default function ChatArea(props: {
+  messages: getMessagesType[];
+  id: string;
+}) {
   const [input, setInput] = useState("");
   const scrollRef = useRef<HTMLDivElement>(null);
+  const [sending, startSending] = useTransition();
+  const messages = props.messages;
+  const id = props.id;
 
   const sendMessage = async () => {
     if (!input.trim()) return;
-    
-    // const newMessage: CreateMessageProp = {
-    //   id: Date.now().toString(),
-    //   chatId: "asdfasf",
-    //   sender: "user",
-    //   content: input,
-    // };
 
-    // setMessages((prev) => [...prev, newMessage]);
+    startSending(async () => {
+      console.log("Message sending...");
+      const res = await axios.post("/api/ai/gemini", {
+        prompt: input,
+      });
+      console.log("response in chat area: ", res);
 
-    try {
-      // const sent = await createMessageAction(newMessage);
-      // console.log("Message sent sent:", sent);
-    // const res = await axios.post("/api/ai/gemini", {
-    //   prompt: input,
-    // });
+      if (res.status !== 200) {
+        notify("Error", "Something went wrong. Please try again.");
+        console.error("API call failed");
+        return;
+      }
 
-    // if(res.status !== 200){
-    //   setMessages((prev)=> [...prev, {id: Date.now().toString(), sender: "ai" as const, content: "Something went wrong. Please try again."}])
-    // }
-    // console.log("response in chat area: ", res);
-    // setMessages((prev)=> [...prev, {id: Date.now().toString(), sender: "ai", content: res.data}])
-  } catch (error) {
-    console.error("Error:", error);
-  }
+      const userMessage$ = createMessageAction({
+        chatId: id,
+        sender: "user",
+        body: input,
+      });
+      const message$ = createMessageAction({
+        chatId: id,
+        sender: "ai",
+        body: res.data,
+      });
 
-  
-  setInput("");
+      const [userMessage, message] = await Promise.all([
+        userMessage$,
+        message$,
+      ]);
+
+      console.log("response in chat area: ", res.data);
+      if (!message.id || !userMessage.id) {
+        notify("Error", "Something went wrong. Please try again.");
+        console.error("DB message write failed");
+        return;
+      }
+      console.log("Message stored in DB: ", message, userMessage);
+
+      await revalidateChat(`/chat/${id}`);
+    });
+
+    setInput("");
   };
 
   useEffect(() => {

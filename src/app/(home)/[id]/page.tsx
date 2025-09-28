@@ -7,7 +7,7 @@ const page = async (props: { params: Promise<{id: string}>;}) => {
     const messages = await getChatMessagesAction(params.id);
     console.log("Getting the messages: ", messages)
   return (
-    <ChatArea messages={messages}/>
+    <ChatArea messages={messages} id={params.id}/>
   )
 }
 
