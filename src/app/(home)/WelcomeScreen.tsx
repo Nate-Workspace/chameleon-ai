@@ -17,12 +17,14 @@ import React, { useState, useTransition } from "react";
 import { notify } from "../_components/notification/notify";
 import { createMessageAction } from "./actions/create-message-action";
 import { createChatAction } from "./actions/create-chat.action";
+import { useRouter } from "next/navigation";
 
 const WelcomeScreen = () => {
   const [sending, startSending] = useTransition();
   const [activeTab, setActiveTab] = useState("All");
   const [input, setInput] = useState("");
   const tabs = ["All", "Text", "Image", "Video", "Music", "Analytics"];
+  const router = useRouter();
 
   const features = [
     {
@@ -58,7 +60,7 @@ const WelcomeScreen = () => {
       }
       const chat = await createChatAction({title: 'Chat name here'})
 
-      if(!chat.id){
+      if(!chat || !chat.id){
         notify("Error", "Something went wrong. Please try again.")
         console.log("Error trying to create a chat.")
       }
@@ -75,7 +77,7 @@ const WelcomeScreen = () => {
         return;
       }
       console.log("Message stored in DB: ", message, userMessage);
-      
+      router.push(`/${chat.id}`)
 
     });
   };
