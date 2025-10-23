@@ -14,7 +14,6 @@ export async function getChats() {
     .from(chat)
     .orderBy(desc(chat.lastMessageAt));
 
-  // Convert dates to ISO strings
   return result.map((chat) => ({
     ...chat,
     lastMessageAt: chat.lastMessageAt?.toISOString() ?? new Date().toISOString(),

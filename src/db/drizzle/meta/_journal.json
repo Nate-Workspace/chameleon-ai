@@ -15,6 +15,13 @@
       "when": 1759070570022,
       "tag": "0001_purple_stone_men",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1761239522557,
+      "tag": "0002_small_sally_floyd",
+      "breakpoints": true
     }
   ]
 }

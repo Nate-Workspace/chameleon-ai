@@ -1,1 +1,1 @@
-export type Folder = { id: string; name: string; color: string };
+export type Folder = { id: string; name: string; createdAt: string };
