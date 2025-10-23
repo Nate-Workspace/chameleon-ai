@@ -4,16 +4,8 @@ import React, { useEffect, useState } from "react";
 import { Search } from "lucide-react";
 import ThemeToggler from "./ThemeToggler";
 import { formatTimeAgo } from "@/utils/timeFormats";
-
-type Folder = { id: string; name: string; color: string };
-type Chat = {
-  id: string;
-  title: string;
-  folderId: string | null;
-  lastMessageAt: string;
-  createdAt: string;
-  active?: boolean;
-};
+import {Chat} from '@/types/chat-types';
+import {Folder} from '@/types/folder-types';
 
 const defaultFolders: Folder[] = [
   { id: "f1", name: "Work chats", color: "bg-green-500" },
