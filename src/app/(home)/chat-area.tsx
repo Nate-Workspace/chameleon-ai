@@ -28,8 +28,15 @@ export default function ChatArea(props: {
 
     startSending(async () => {
       console.log("Message sending...");
+
+      const recentHistory = messages.slice(-20).map((m) => ({
+        role: m.sender === "user" ? "user" : "model",
+        content: m.body,
+      }));
+
       const res = await axios.post("/api/ai/gemini", {
         prompt: input,
+        history: recentHistory,
       });
       console.log("response in chat area: ", res);
 
@@ -69,6 +76,15 @@ export default function ChatArea(props: {
     setInput("");
   };
 
+  // const copyToClipboard = async (text: string) => {
+  //   try {
+  //     await navigator.clipboard.writeText(text);
+  //     notify("Success", "Message copied to clipboard!");
+  //   } catch (err) {
+  //     notify("Error", "Failed to copy message");
+  //   }
+  // };
+
   useEffect(() => {
     scrollRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
@@ -87,11 +103,35 @@ export default function ChatArea(props: {
               <div
                 className={`rounded-lg px-4 py-3 max-w-[80%] text-sm leading-relaxed ${
                   msg.sender === "user"
-                    ? "bg-blue-500 text-white"
-                    : "bg-gray-100 text-gray-900"
+                    ? "bg-gray-500 text-white"
+                    : "bg-transparent text-gray-100"
                 }`}
               >
-                <ReactMarkdown>{msg?.body}</ReactMarkdown>
+                <ReactMarkdown
+                  key={msg.id + "-md"}
+                  components={{
+                    code: ({ className, children, inline, ...props }: any) => {
+                      const isInline = !!inline; // Ensure it's treated as a boolean
+                      const match = /language-(\w+)/.exec(className || "");
+                      return !isInline ? (
+                        <pre className="bg-gray-900 p-3 rounded-lg overflow-x-auto text-xs my-2">
+                          <code className={className} {...props}>
+                            {children}
+                          </code>
+                        </pre>
+                      ) : (
+                        <code
+                          className="bg-gray-700 text-yellow-300 px-1 py-0.5 rounded text-xs"
+                          {...props}
+                        >
+                          {children}
+                        </code>
+                      );
+                    },
+                  }}
+                >
+                  {msg?.body}
+                </ReactMarkdown>
               </div>
             </div>
           ))}

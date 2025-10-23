@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
 import { Poppins } from "next/font/google";
-import { Box } from '@mantine/core';
+import { Box } from "@mantine/core";
 import { MantineProviderWrapper } from "../providers/Mantine.provider";
-import SideMenu from "./_components/sidebar/SideMenu";
 import "./globals.css";
-import '@mantine/core/styles.css';
+import "@mantine/core/styles.css";
 import ScreenWrapper from "./_components/ScreenWrapper";
+import SideMenuWrapper from "./_components/sidebar/SideMenuWrapper";
 
 const poppins = Poppins({
   variable: "--font-poppins",
@@ -28,13 +28,13 @@ export default function RootLayout({
       <body className={`${poppins.variable} antialiased`}>
         <MantineProviderWrapper>
           <ScreenWrapper>
-        <Box className="mx-auto w-full flex h-full gap-4 overflow-hidden">
-          <Box className="hidden md:block">
-            <SideMenu />
-          </Box>
-          <Box className="grow">{children}</Box>
-        </Box>
-        </ScreenWrapper>
+            <Box className="mx-auto w-full flex h-full gap-4 overflow-hidden">
+              <Box className="hidden md:block">
+                <SideMenuWrapper />
+              </Box>
+              <Box className="grow">{children}</Box>
+            </Box>
+          </ScreenWrapper>
         </MantineProviderWrapper>
       </body>
     </html>
