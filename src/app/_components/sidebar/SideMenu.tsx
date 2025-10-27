@@ -7,6 +7,7 @@ import { formatTimeAgo } from "@/utils/timeFormats";
 import { Chat } from "@/types/chat-types";
 import { Folder } from "@/types/folder-types";
 import { useRouter, usePathname } from "next/navigation";
+import { Tooltip } from "@mantine/core";
 
 export default function SideMenu({
   folders,
@@ -33,6 +34,10 @@ export default function SideMenu({
   const onNewChatClicked = () => {
     router.push("/");
   };
+
+  const onFolderCreate= ()=>{
+    
+  }
 
   return (
     <aside className="w-80 h-full bg-[#1f1f1f] border-r border-gray-800 flex flex-col">
@@ -65,9 +70,41 @@ export default function SideMenu({
         <div className="flex-1 overflow-y-auto px-3 space-y-6 custom-scrollbar">
           {/* Folders */}
           <section>
-            <h3 className="text-gray-400 text-[10px] uppercase tracking-[0.12em] mb-2">
-              Folders
-            </h3>
+            <div className="flex items-center justify-between mb-2">
+              <h3 className="text-gray-400 text-[10px] uppercase tracking-[0.12em]">
+                Folders
+              </h3>
+              <Tooltip
+                label="Create a folder"
+                position="right"
+                withArrow
+                transitionProps={{ transition: "fade", duration: 200 }}
+                styles={{
+                  tooltip: {
+                    backgroundColor: "#2a2a2a",
+                    color: "white",
+                    fontSize: "12px",
+                    padding: "6px 10px",
+                    borderRadius: "6px",
+                    border: "1px solid #3a3a3a",
+                  },
+                  arrow: {
+                    backgroundColor: "#2a2a2a",
+                    borderColor: "#3a3a3a",
+                  },
+                }}
+              >
+                <button
+                  type="button"
+                  className="text-gray-400 hover:text-white transition cursor-pointer"
+                  aria-label="Add folder"
+                  onClick={onFolderCreate}
+                >
+                  <Plus size={16} strokeWidth={2} />
+                </button>
+              </Tooltip>
+            </div>
+
             {folders.length > 0 ? (
               <ul className="space-y-2">
                 {folders.map((folder) => (
@@ -95,7 +132,9 @@ export default function SideMenu({
               <div className="bg-[#2a2a2a]/30 rounded-md px-4 py-6 text-center border border-dashed border-gray-700">
                 <div className="flex flex-col items-center gap-2">
                   <div className="w-10 h-10 rounded-full bg-[#2a2a2a] flex items-center justify-center">
-                    <span className="text-gray-500 text-xl"><FolderOpen size={28} className="text-gray-600" /></span>
+                    <span className="text-gray-500 text-xl">
+                      <FolderOpen size={28} className="text-gray-600" />
+                    </span>
                   </div>
                   <p className="text-gray-400 text-sm">No folders yet</p>
                   <p className="text-gray-500 text-xs">
